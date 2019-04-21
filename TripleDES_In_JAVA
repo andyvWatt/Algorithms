@@ -1,0 +1,28 @@
+Inputs :
+data =>>> "15ce89cd1a2a838f4f6d49d60438251915ce89cd1a2a838f"
+ekay =>>> "0000000000000000"
+
+Output : c0a946402dd20f5e
+
+-----------------------------------------------------
+
+public  static String encrypt(String data, String ekey) {
+        String encrypteddata = null;
+   try{            
+        String key = ekey;
+        byte[] encryptKey = ISOUtil.hex2byte(key);  //Hex String to Byte Array      
+        DESedeKeySpec spec = new DESedeKeySpec(encryptKey);
+        SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DESede");
+        SecretKey theKey = keyFactory.generateSecret(spec);        
+        Cipher cipher = Cipher.getInstance("DESede/CBC/NoPadding");       
+        IvParameterSpec IvParameters = new IvParameterSpec( new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 });        
+        cipher.init(Cipher.ENCRYPT_MODE, theKey, IvParameters);  
+        String plain = data;       
+        byte[] plaintext = ISOUtil.hex2byte(plain);
+        byte[] encrypted = cipher.doFinal(plaintext);        
+         encrypteddata= ISOUtil.byte2hex(encrypted);             
+    }
+    catch(Exception e){        
+    }
+        return encrypteddata;      
+    }   
